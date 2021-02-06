@@ -19,8 +19,35 @@ enum Category {
     Angular,
 }
 
-function getAllBooks() {
-    const books = <const>[
+interface DamageLogger {
+    (reason: string): void;
+}
+interface Book {
+    id: number;
+    title: string;
+    author: string;
+    available: boolean;
+    category: Category;
+    pages?: number;
+    // markDamaged?: (reason: string) => void;
+    markDamaged?: DamageLogger;
+}
+
+interface Person {
+    name: string;
+    email: string;
+}
+interface Author extends Person {
+    numBooksPublished: number;
+}
+interface Librarian extends Person {
+    department: string;
+    assistCustomer: (custName: string) => void;
+}
+type BookProperties = keyof Book;
+
+function getAllBooks(): ReadonlyArray<Book> {
+    const books: readonly Book[] = <const>[
         {
             id: 1,
             category: Category.JavaScript,
@@ -114,25 +141,24 @@ function createCustomerID(name: string, age?: number, city?: string): void {
     }
 }
 
-function getBookByID(id: number): any {
+function getBookByID(id: number): Book | undefined {
     const books = getAllBooks();
     return books.find(book => book.id === id);
 }
 
-function сheckoutBooks(customer: string, ...bookIDs: number[]): string[] {
-    console.log(`Customer Name ${customer}`);
+// function сheckoutBooks(customer: string, ...bookIDs: number[]): string[] {
+//     console.log(`Customer Name ${customer}`);
 
-    const titles: string[] = [];
+//     const titles: string[] = [];
 
-    bookIDs.forEach(id => {
-        const book = getBookByID(id);
-        if (book?.available) {
-            titles.push(book.title);
-        }
-    });
-    return titles;
-}
-
+//     bookIDs.forEach(id => {
+//         const book = getBookByID(id);
+//         if (book?.available) {
+//             titles.push(book.title);
+//         }
+//     });
+//     return titles;
+// }
 // createCustomerID('Anna');
 // createCustomerID('Anna', 30);
 // createCustomerID('Anna', 30, 'Kyiv');
@@ -174,6 +200,12 @@ function getTitles(...args: any[]) {
 // console.log(checkedOutBooks);
 
 // Task 03.04. Assertion Functions
+// если два типа то можно использовать
+function assertStringAndNumberValue(val: any): asserts val is string | number {
+    if (typeof val !== 'string' && typeof val !== 'number') {
+        throw new Error('value should have been a string or number');
+    }
+}
 
 function assertStringValue(val: any): asserts val is string {
     if (typeof val !== 'string') {
@@ -187,5 +219,123 @@ function bookTitleTransform(title: any): string {
     return [...title].reverse().join('');
 }
 
-console.log(bookTitleTransform('строка'));
-console.log(bookTitleTransform(1));
+// console.log(bookTitleTransform('строка'));
+// console.log(bookTitleTransform(1));
+
+// 04. Interfaces
+// Task 04.01. Defining an Interface
+
+function printBook(book: Book): void {
+    console.log(`${book.title} by ${book.author}`);
+}
+
+const myBook: Book = {
+    id: 5,
+    title: 'Colors, Backgrounds, and Gradients',
+    author: 'Eric A. Meyer',
+    available: true,
+    category: Category.CSS,
+    // year: 2015,
+    // copies: 3,
+    pages: 200,
+    markDamaged: (reason: string) => `Damaged: ${reason}`,
+};
+
+// printBook(myBook);
+// console.log(myBook.markDamaged('missing back cover'));
+
+// Task 04.02. Defining an Interface for Function Types
+
+const logDamage: DamageLogger = (reason: string) => `Damaged: ${reason}`;
+// console.log(logDamage('missing back cover'));
+
+// Task 04.03. Extending Interface
+const favoriteAuthor: Author = {
+    name: 'Anna',
+    email: 'anna@gmail.com',
+    numBooksPublished: 3,
+};
+
+const favoriteLibrarian: Librarian = {
+    name: 'Anna',
+    email: 'anna@gmail.com',
+    department: 'classical',
+    assistCustomer(custName) {
+        console.log(custName);
+    },
+};
+
+
+// Task 04.04. Optional Chaining
+
+const offer: any = {
+    book: {
+        title: 'Essential TypeScript',
+    },
+};
+
+// console.log(offer.magazine);
+// console.log(offer.magazine?.getTitle());
+// console.log(offer.book.getTitle?.());
+// console.log(offer.book.authors?.[0]);
+
+// Task 04.05. Keyof Operator
+
+function getProperty(book: Book, prop: BookProperties): any {
+    if (typeof book[prop] === 'function') {
+        return (book[prop] as Function).name;
+    }
+    return book[prop];
+}
+// console.log(getProperty(myBook, 'title'));
+// console.log(getProperty(myBook, 'markDamaged'));
+// console.log(getProperty(myBook, 'isbn'));
+
+// 05. Classes
+// Task 05.01. Creating and Using Classes
+
+class ReferenceItem {
+    // title: string;
+    //  year: number;
+    //  constructor(newTitle: string, newYear: number) {
+    //      console.log('Creating a new ReferenceItem...' );
+    //      this.title = newTitle;
+    //      this.year = newYear;
+    //  }
+
+    #id: number;
+
+    private _publusher: string;
+
+    static department: string = "Classical Literature";
+
+    get publisher(): string {
+        return this._publusher.toUpperCase();
+    }
+
+    set publisher (newPublisher: string) {
+        this._publusher = newPublisher;
+    }
+
+    constructor(id: number, public title: string, private year: number) {
+             console.log('Creating a new ReferenceItem...' );
+             this.#id = id;
+    }
+
+    getId(): number {
+        return this.#id;
+    }
+
+     printItem() {
+         console.log(`${this.title} was published in ${this.year}`);
+         console.log(ReferenceItem.department);
+     }
+}
+
+const ref: ReferenceItem = new ReferenceItem(12, 'TypeScript', 2021);
+// ref.printItem();
+// console.log(ref);
+// ref.publisher = 'Publisher';
+// console.log(ref.publisher);
+// console.log (ref.getId());
+
