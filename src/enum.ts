@@ -7,5 +7,4 @@ enum Category {
 }
 
 
-
 export { Category };
