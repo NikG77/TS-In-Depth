@@ -1,13 +1,12 @@
 /* eslint-disable no-redeclare */
 
 import { NoEmitOnErrorsPlugin } from 'webpack';
-import  { Book, logger as DamageLogger, Person, Author, Librarian, logger, Magazine } from './intefaces';
+import { Book, logger as DamageLogger, Person, Author, Librarian, logger, Magazine } from './intefaces';
 import { Category } from './enum';
 import { UniversityLibrarian, RefBook, Shelf } from './classes';
-import { PersonBook } from './types';
+import { BookRequiredFields, PersonBook, UpdatedBook, СreateCustomerFunctionType } from './types';
 import type { Library } from './classes';
-import { purge } from './functions';
-
+import { getProperty, purge, createCustomer } from './functions';
 
 showHello('greeting', 'TypeScript');
 
@@ -19,7 +18,6 @@ function showHello(divName: string, name: string) {
 // 02. Types Basics
 // Task 02.01. Basic Types
 // Task 02.02. Const Assertions
-
 
 const myBook: Book = {
     id: 5,
@@ -72,14 +70,12 @@ const offer: any = {
 
 // Task 04.05. Keyof Operator
 
-
 // console.log(getProperty(myBook, 'title'));
 // console.log(getProperty(myBook, 'markDamaged'));
 // console.log(getProperty(myBook, 'isbn'));
 
 // 05. Classes
 // Task 05.01. Creating and Using Classes
-
 
 // const ref: ReferenceItem = new ReferenceItem(12, 'TypeScript', 2021);
 // ref.printItem();
@@ -90,7 +86,7 @@ const offer: any = {
 
 // Task 05.02. Extending Classes
 
-const refBook = new /* Encyclopedia */RefBook(1, 'Typescript', 2021, 3);
+const refBook = new /* Encyclopedia */ RefBook(1, 'Typescript', 2021, 3);
 // console.log(refBook);
 // console.log(refBook.printItem());
 
@@ -102,11 +98,10 @@ const refBook = new /* Encyclopedia */RefBook(1, 'Typescript', 2021, 3);
 
 // Task 05.04. Interfaces for Class Types
 
-
 const favoriteLibrarian: Librarian = new UniversityLibrarian();
 
-favoriteLibrarian.name = 'Anna';
-favoriteLibrarian.assistCustomer('Boris');
+// favoriteLibrarian.name = 'Anna';
+// favoriteLibrarian.assistCustomer('Boris');
 
 // Task 05.05. Intersection and Union Types
 
@@ -118,7 +113,7 @@ const personBook: PersonBook = {
     available: false,
     title: 'TypeScripy',
     category: Category.CSS,
-}
+};
 
 // 06. Modules and Namespaces
 // Task 06.01. Using Namespaces
@@ -127,7 +122,7 @@ const personBook: PersonBook = {
 
 import('./classes').then(module => {
     console.log(new module.Reader());
-})
+});
 
 // Task 06.06. Type-Only Imports and Exports
 
@@ -159,7 +154,7 @@ const inventory: Book[] = [
         author: 'Andrea Chiarelli',
         available: true,
     },
-]
+];
 
 // const result: Book[]  = purge<Book>(inventory);
 // console.log(result);
@@ -167,17 +162,69 @@ const inventory: Book[] = [
 // Task 07.02. Generic Interfaces and Classes
 const bookShelf = new Shelf<Book>();
 inventory.forEach(book => bookShelf.add(book));
-console.log(bookShelf.getFirst());
+// console.log(bookShelf.getFirst());
 
-const magazines: Magazine[]= [
+const magazines: Magazine[] = [
     { title: 'Programming Language Monthly', publisher: 'Code Mags' },
     { title: 'Literary Fiction Quarterly', publisher: 'College Press' },
-    { title: 'Five Points', publisher: 'GSU' }
+    { title: 'Five Points', publisher: 'GSU' },
 ];
 
 const magazineShelf = new Shelf<Magazine>();
 magazines.forEach(mag => magazineShelf.add(mag));
-console.log(magazineShelf.getFirst())
+// console.log(magazineShelf.getFirst());
+
+// Task 07.03. Generic Constraints
+// magazineShelf.printTitles();
+// console.log(magazineShelf.find('Five Points'));
+// console.log(getProperty(magazines[0], 'title'));
+
+
+// Task 07.04. Utility Types
+// const book: BookRequiredFields = {
+//     author: 'Anna',
+//     id: 1,
+//     title: 'Unknown',
+//     available: false,
+//     category: Category.CSS,
+//     pages: 200,
+//     markDamaged: null,
+// };
+
+// const B: UpdatedBook = {
+//     id: 1,
+//     }
+
+// const params: Parameters<СreateCustomerFunctionType> = ['Anna'];
+// createCustomer(...params);
+
+// 08. Decorators
+// Task 08.01. Class Decorators (sealed)
+// const l = new UniversityLibrarian();
+// console.log(l);
+
+// Task 08.02. Class Decorators that replace constructor functions (logger)
+// const l = new UniversityLibrarian();
+// l.name ='Anna'
+// console.log(l);
+// l['printLibrarian']();
+
+// Task 08.03. Method Decorator (writable)
+// const l = new UniversityLibrarian();
+// l.assistFaculty = null;
+// // l.teachCommunity = null;
+// console.log(l);
+
+// Task 08.04. Method Decorator (timeout)
+const e = new RefBook(1, 'Unknonw',2021, 2);
+e.printItem();
+
+
+
+
+
+
+
 
 
 

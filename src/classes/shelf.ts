@@ -1,5 +1,7 @@
-export default class Shelf<T> {
+import { ShelfItem } from "./../intefaces";
+export default class Shelf<T extends ShelfItem> {
   private items: T[] = [];
+
   add(item: T): void {
     this.items.push(item);
   }
@@ -8,11 +10,11 @@ export default class Shelf<T> {
     return this.items[0];
   }
 
-  // find(title: string): T {
-  //   return this.find(item => item.title === title);
-  // }
+  find(title: string): T {
+    return this.items.find(item => item.title === title);
+  }
 
-  // printTitles(): void {
-  //   this.items.forEach(item => console.log(item.title));
-  // }
+  printTitles(): void {
+    this.items.forEach(item => console.log(item.title));
+  }
 }
