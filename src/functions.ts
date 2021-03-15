@@ -1,5 +1,5 @@
 import { Category } from './enum';
-import { Book } from './intefaces';
+import { Book, LibMgrCallback } from './intefaces';
 import { BookOrUndefined, BookProperties } from './types';
 
 export function getAllBooks(): ReadonlyArray<Book> {
@@ -44,7 +44,7 @@ export function logFirstAvailable(books: readonly any[] = getAllBooks()): void {
     console.log(`Name of first available book ${book.title}`);
 }
 
-export function getBookTitlesByCategory(category: Category = Category.JavaScript): Array<string> {
+export function getBookTitlesByCategory(category: Category ): Array<string> {
     const books = getAllBooks();
     return books
         .filter((book: { category: Category }) => book.category === category)
@@ -202,3 +202,47 @@ export function printBook(book: Book): void {
 export function purge<T>(inventory: Array<T>): T[] {
     return inventory.slice(2);
 }
+
+export function getBooksByCategory(category: Category, callback: LibMgrCallback): void {
+    setTimeout(() => {
+        try {
+            const titles = getBookTitlesByCategory(category);
+            if (titles.length > 0) {
+                callback(null, titles);
+            } else {
+                throw new Error('No books found.');
+            }
+        } catch (error) {
+            callback(error, null);
+        }
+    }, 2000);
+}
+
+export function logCategorySearch(err: Error, titles: string[]): void {
+    if (err) {
+        console.log(`Error message: ${err.message}`);
+    } else console.log(titles);
+}
+
+export function getBooksByCategoryPromise(category: Category): Promise<string[]> {
+    return new Promise<string[]>((resolve, reject) => {
+        setTimeout(() => {
+            const titles = getBookTitlesByCategory(category);
+            if (titles.length > 0) {
+                resolve(titles);
+            } else {
+                reject('No books found.');
+            }
+        }, 2000);
+    });
+}
+
+
+export async function logSearchResults(category: Category): Promise<void> {
+    const titles = await getBooksByCategoryPromise(category);
+    console.log(titles);
+
+}
+
+
+

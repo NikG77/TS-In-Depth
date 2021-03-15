@@ -6,5 +6,4 @@ enum Category {
   Angular,
 }
 
-
 export { Category };

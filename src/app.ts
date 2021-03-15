@@ -6,7 +6,17 @@ import { Category } from './enum';
 import { UniversityLibrarian, RefBook, Shelf } from './classes';
 import { BookRequiredFields, PersonBook, UpdatedBook, СreateCustomerFunctionType } from './types';
 import type { Library } from './classes';
-import { getProperty, purge, createCustomer } from './functions';
+import {
+    getProperty,
+    purge,
+    createCustomer,
+    getBooksByCategory,
+    getBookTitlesByCategory,
+    logCategorySearch,
+    getBooksByCategoryPromise,
+    getTitles,
+    logSearchResults,
+} from './functions';
 
 showHello('greeting', 'TypeScript');
 
@@ -120,9 +130,9 @@ const personBook: PersonBook = {
 
 // Task 06.05. Dynamic Import Expression
 
-import('./classes').then(module => {
-    console.log(new module.Reader());
-});
+// import('./classes').then(module => {
+//     console.log(new module.Reader());
+// });
 
 // Task 06.06. Type-Only Imports and Exports
 
@@ -160,25 +170,25 @@ const inventory: Book[] = [
 // console.log(result);
 
 // Task 07.02. Generic Interfaces and Classes
-const bookShelf = new Shelf<Book>();
-inventory.forEach(book => bookShelf.add(book));
-// console.log(bookShelf.getFirst());
 
-const magazines: Magazine[] = [
-    { title: 'Programming Language Monthly', publisher: 'Code Mags' },
-    { title: 'Literary Fiction Quarterly', publisher: 'College Press' },
-    { title: 'Five Points', publisher: 'GSU' },
-];
+// const bookShelf = new Shelf<Book>();
+// inventory.forEach(book => bookShelf.add(book));
+// // console.log(bookShelf.getFirst());
 
-const magazineShelf = new Shelf<Magazine>();
-magazines.forEach(mag => magazineShelf.add(mag));
+// const magazines: Magazine[] = [
+//     { title: 'Programming Language Monthly', publisher: 'Code Mags' },
+//     { title: 'Literary Fiction Quarterly', publisher: 'College Press' },
+//     { title: 'Five Points', publisher: 'GSU' },
+// ];
+
+// const magazineShelf = new Shelf<Magazine>();
+// magazines.forEach(mag => magazineShelf.add(mag));
 // console.log(magazineShelf.getFirst());
 
 // Task 07.03. Generic Constraints
 // magazineShelf.printTitles();
 // console.log(magazineShelf.find('Five Points'));
 // console.log(getProperty(magazines[0], 'title'));
-
 
 // Task 07.04. Utility Types
 // const book: BookRequiredFields = {
@@ -216,15 +226,59 @@ magazines.forEach(mag => magazineShelf.add(mag));
 // console.log(l);
 
 // Task 08.04. Method Decorator (timeout)
-const e = new RefBook(1, 'Unknonw',2021, 2);
-e.printItem();
+// const e = new RefBook(1, 'Unknonw', 2021, 2);
+// e.printItem();
+
+// Task 08.05. Parameter Decorator (logParameter)
+
+// const l = new UniversityLibrarian();
+// l.name = 'Anna';
+// l.assistCustomer('Boris');
+// console.log(l);
+
+// Task 08.06. Property Decorator
+// const l = new UniversityLibrarian();
+// l.name = 'Anna';
+// console.log(l.name)
+// l.assistCustomer('Boris');
+// console.log(l);
+
+// Task 08.07. Accessor Decorator
+
+const e = new RefBook(1, 'Unknonw', 2021, 2);
+e.copies = 10;
+// e.copies = 0;
+// e.copies = 1.1;
+
+// 09. Asynchronous Patterns
+// Task 09.01. Callback Functions
+
+// console.log('start');
+// getBooksByCategory(Category.JavaScript, logCategorySearch);
+// // getBooksByCategory(Category.Software, logCategorySearch);
+// console.log('finish');
+
+// Task 09.02. Promises
+
+// console.log('start');
+// getBooksByCategoryPromise(Category.JavaScript)
+//     .then(titles => {
+//         console.log(titles);
+//         return titles.length;
+//     })
+//     .then(numOfBook => console.log(numOfBook))
+//     .catch(err => console.log(err));
+// // getBooksByCategoryPromise(Category.Software)
+// //     .then(titles => console.log(titles))
+// //     .catch(err => console.log(err));
+// console.log('finish');
 
 
+// Task 09.03. Async Functions
 
+console.log('start');
 
+logSearchResults(Category.JavaScript);
+logSearchResults(Category.Software).catch(err => console.log(err));
 
-
-
-
-
-
+console.log('finish');
