@@ -273,12 +273,71 @@ e.copies = 10;
 // //     .catch(err => console.log(err));
 // console.log('finish');
 
-
 // Task 09.03. Async Functions
 
-console.log('start');
+// console.log('start');
 
-logSearchResults(Category.JavaScript);
-logSearchResults(Category.Software).catch(err => console.log(err));
+// logSearchResults(Category.JavaScript);
+// logSearchResults(Category.Software).catch(err => console.log(err));
 
-console.log('finish');
+// console.log('finish');
+
+// TASK1
+
+// Вывести массив объектов с заданным значением возраста от максимального (1 - самый старший, 2 - второй по страришинству и т.д)
+interface Children {
+    id: string;
+    age: number;
+    firstName: string;
+}
+
+const children: Children[] = [
+    { id: '1', age: 15, firstName: 'Donny' },
+    { id: '2', age: 14, firstName: 'Many' },
+    { id: '3', age: 15, firstName: 'Tony' },
+    { id: '4', age: 16, firstName: 'Donny' },
+    { id: '5', age: 16, firstName: 'Peter' },
+    { id: '6', age: 10, firstName: 'Anna' },
+];
+
+const findOlderChildren = (value: number): Children[] => {
+    children.sort((a, b) => b.age - a.age);
+    const sortedSetOfAges = Array.from(new Set(children.map(child => child.age)));
+
+    return children.filter(child => sortedSetOfAges[value - 1] === child.age);
+};
+
+console.log(findOlderChildren(1));
+
+// TASK 2
+// Получить на основе входящего массива массив с рандомным кол-вом элементов в диапазоне от min до max, не изменяя входной массив
+const writers: String[] = [
+    `Brad Bird`,
+    `Robert Rodrigues`,
+    `Takeshi Kitano`,
+    `Hayao Miazaki`,
+    `Robert Zemeckis`,
+    `Martin Scorsese`,
+    `Quentin Tarantino`,
+    `Stephen King`,
+];
+
+function getRandomArray(arr: String[], min: number, max: number): String[] {
+    const numberRandom = getRandomIntegerNumber(min, max);
+    const arrClon = arr.slice();
+    const arrNew: String[] = [];
+    let numberArrRandom: number;
+
+    for (let i = 0; i < numberRandom; i++) {
+        numberArrRandom = getRandomIntegerNumber(0, arrClon.length - 1);
+        arrNew.push(arrClon[numberArrRandom]);
+        arrClon.splice(numberArrRandom, 1);
+    }
+    return arrNew;
+}
+
+function getRandomIntegerNumber(min: number, max: number): number {
+    return min + Math.floor(Math.random() * (max - min));
+}
+
+console.log(getRandomArray(writers, 2, 5));
